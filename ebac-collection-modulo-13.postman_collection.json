@@ -1,0 +1,1219 @@
+{
+	"info": {
+		"_postman_id": "fb032c4a-44b5-457e-bf2f-deafc5927d03",
+		"name": "ebac-collection-modulo-13",
+		"description": "Esta collection foi gerada para o exercício do módulo 13 do curso da EBAC.\n\nRefere-se aos testes de API feitos no ServeRest.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Usuarios",
+			"item": [
+				{
+					"name": "Método POST - Validações de Cadastro de usuário",
+					"item": [
+						{
+							"name": "Deve cadastrar usuário quando todos os campos obrigatórios são informados com valores válidos",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.variables.replaceIn('{{$randomFullName}}');\r",
+											"pm.variables.replaceIn('{{$randomEmail}}');"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"\r",
+											"// Fiz testes separados somente para treinar; todas estas validações poderiam ser feitas em um único teste (como faço em meu dia a dia)\r",
+											"\r",
+											"pm.test(\"Status code deve ser igual a 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Deve retonar id do usuário cadastrado\", function () {\r",
+											"    pm.expect(responseJson._id).to.not.be.empty;\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Deve retornar mensagem de usuário cadastrado com sucesso\", function () {\r",
+											"    pm.expect(responseJson.message).to.be.equal(\"Cadastro realizado com sucesso\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"nome\": \"{{$randomFullName}}\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"password\": \"teste\",\r\n  \"administrador\": \"true\"\r\n}"
+								},
+								"url": {
+									"raw": "{{host}}{{endpoint-usuarios}}",
+									"host": [
+										"{{host}}{{endpoint-usuarios}}"
+									]
+								},
+								"description": "Validar que, ao enviar requisição POST para o endpoint /usuarios, informando todos os campos obrigatórios com valores válidos, um novo usuário é cadastrado corretamente.\n\nRetorno esperado: \n\nStatus code: 201\nResponse body: id do usuário cadastrado e mensagem \"Cadastro realizado com sucesso\""
+							},
+							"response": []
+						},
+						{
+							"name": "Não deve cadastrar usuário quando e-mail informado já está cadastrado",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var envURL = pm.collectionVariables.get('host');\r",
+											"var usuariosEndpoint = pm.collectionVariables.get('endpoint-usuarios');\r",
+											"\r",
+											"var fullName = pm.variables.replaceIn('{{$randomFullName}}');\r",
+											"var email = pm.variables.replaceIn('{{$randomEmail}}');\r",
+											"console.log(email);\r",
+											"\r",
+											"pm.collectionVariables.set(\"emailJaCadastrado\", email); \r",
+											"\r",
+											"const cadastrarUsuarioPostRequest = {\r",
+											"    url: envURL + usuariosEndpoint,\r",
+											"    method: 'POST',\r",
+											"    header: {\r",
+											"        'content-type': 'application/json'\r",
+											"    },\r",
+											"    body: {\r",
+											"        mode: 'raw',\r",
+											"        raw: JSON.stringify({\"nome\": fullName, \"email\": email, \"password\": \"teste\", \"administrador\": \"true\"})\r",
+											"    }\r",
+											"};\r",
+											"\r",
+											"pm.sendRequest(cadastrarUsuarioPostRequest);\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"\r",
+											"// Fiz testes separados somente para treinar; todas estas validações poderiam ser feitas em um único teste (como faço em meu dia a dia)\r",
+											"\r",
+											"pm.test(\"Status code deve ser igual a 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Deve retornar mensagem de e-mail já utilizado\", function () {\r",
+											"    pm.expect(responseJson.message).to.be.equal(\"Este email já está sendo usado\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"nome\": \"{{$randomFullName}}\",\r\n  \"email\": \"{{emailJaCadastrado}}\",\r\n  \"password\": \"teste\",\r\n  \"administrador\": \"true\"\r\n}"
+								},
+								"url": {
+									"raw": "{{host}}{{endpoint-usuarios}}",
+									"host": [
+										"{{host}}{{endpoint-usuarios}}"
+									]
+								},
+								"description": "Validar que, ao enviar requisição POST para o endpoint /usuarios, informando todos os campos obrigatórios com valores válidos, porém utilizando um e-mail já cadastrado anteriormet, um novo usuário não é cadastrado.\n\nRetorno esperado: \n\nStatus code: 400\nResponse body: mensagem \"Este email já está sendo usado\""
+							},
+							"response": []
+						},
+						{
+							"name": "Não deve cadastrar usuário quando os dados obrigatórios não são informados",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"\r",
+											"// Fiz testes separados somente para treinar; todas estas validações poderiam ser feitas em um único teste (como faço em meu dia a dia)\r",
+											"\r",
+											"pm.test(\"Status code deve ser igual a 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Deve retornar mensagem de obrigatoriedade de campos\", function () {\r",
+											"    pm.expect(responseJson.nome).to.be.equal(\"nome é obrigatório\");\r",
+											"    pm.expect(responseJson.email).to.be.equal(\"email é obrigatório\");\r",
+											"    pm.expect(responseJson.password).to.be.equal(\"password é obrigatório\");\r",
+											"    pm.expect(responseJson.administrador).to.be.equal(\"administrador é obrigatório\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\r\n}"
+								},
+								"url": {
+									"raw": "{{host}}{{endpoint-usuarios}}",
+									"host": [
+										"{{host}}{{endpoint-usuarios}}"
+									]
+								},
+								"description": "Validar que, ao enviar requisição POST para o endpoint /usuarios, sem informar os campos obrigatórios, um novo usuário não é cadastrado.\n\nRetorno esperado: \n\nStatus code: 400\nResponse body: mensagens \"[campo obrigatório faltante] é obrigatório\""
+							},
+							"response": []
+						},
+						{
+							"name": "Não deve cadastrar usuário quando os dados são enviados em branco",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"\r",
+											"// Fiz testes separados somente para treinar; todas estas validações poderiam ser feitas em um único teste (como faço em meu dia a dia)\r",
+											"\r",
+											"pm.test(\"Status code deve ser igual a 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Deve retornar mensagem de obrigatoriedade de campos\", function () {\r",
+											"    pm.expect(responseJson.nome).to.be.equal(\"nome não pode ficar em branco\");\r",
+											"    pm.expect(responseJson.email).to.be.equal(\"email não pode ficar em branco\");\r",
+											"    pm.expect(responseJson.password).to.be.equal(\"password não pode ficar em branco\");\r",
+											"    pm.expect(responseJson.administrador).to.be.equal(\"administrador deve ser 'true' ou 'false'\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"nome\": \"\",\r\n  \"email\": \"\",\r\n  \"password\": \"\",\r\n  \"administrador\": \"\"\r\n}"
+								},
+								"url": {
+									"raw": "{{host}}{{endpoint-usuarios}}",
+									"host": [
+										"{{host}}{{endpoint-usuarios}}"
+									]
+								},
+								"description": "Validar que, ao enviar requisição POST para o endpoint /usuarios, informando todos os campos obrigatórios com valores em branco, um novo usuário não é cadastrado.\n\nRetorno esperado: \n\nStatus code: 400\nResponse body: mensagens \"[campo em branco] não pode ficar me branco\" e \"administrador deve ser true ou false\"."
+							},
+							"response": []
+						},
+						{
+							"name": "Não deve cadastrar usuário quando os dados são enviados inválidos",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"\r",
+											"// Fiz testes separados somente para treinar; todas estas validações poderiam ser feitas em um único teste (como faço em meu dia a dia)\r",
+											"\r",
+											"pm.test(\"Status code deve ser igual a 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Deve retornar mensagem de obrigatoriedade de campos\", function () {\r",
+											"    pm.expect(responseJson.nome).to.be.equal(\"nome deve ser uma string\");\r",
+											"    pm.expect(responseJson.email).to.be.equal(\"email deve ser um email válido\");\r",
+											"    pm.expect(responseJson.password).to.be.equal(\"password deve ser uma string\");\r",
+											"    pm.expect(responseJson.administrador).to.be.equal(\"administrador deve ser 'true' ou 'false'\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"nome\": 537,\r\n  \"email\": \"emailinvalido\",\r\n  \"password\": 120,\r\n  \"administrador\": 456\r\n}"
+								},
+								"url": {
+									"raw": "{{host}}{{endpoint-usuarios}}",
+									"host": [
+										"{{host}}{{endpoint-usuarios}}"
+									]
+								},
+								"description": "Validar que, ao enviar requisição POST para o endpoint /usuarios, informando todos os campos obrigatórios com valores inválidos, um novo usuário não é cadastrado.\n\nRetorno esperado: \n\nStatus code: 400\nResponse body: mensagens: \"nome deve ser uma string\", \"email deve ser um email válido\", \"password deve ser uma string\" e \"administrador deve ser true ou false\"."
+							},
+							"response": []
+						}
+					],
+					"description": "Testes do método POST do endpoint /usuarios - Validações de cadastro de usuários."
+				},
+				{
+					"name": "Método GET - Validações de Busca de usuário",
+					"item": [
+						{
+							"name": "Deve listar todos os usuários cadastrados",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"\r",
+											"const schemaUsuario = {\r",
+											"    \"nome\": \"string\",\r",
+											"    \"email\": \"string\",\r",
+											"    \"password\": \"string\",\r",
+											"    \"administrador\": \"string\",\r",
+											"    \"_id\": \"string\"\r",
+											"};\r",
+											"\r",
+											"// Fiz testes separados somente para treinar; todas estas validações poderiam ser feitas em um único teste (como faço em meu dia a dia)\r",
+											"\r",
+											"pm.test(\"Status code deve ser igual a 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Deve retonar quantidade e lista de usuários cadastrados\", function () {\r",
+											"    pm.expect(responseJson).to.have.property(\"quantidade\");\r",
+											"\r",
+											"    var qtde = responseJson.quantidade;\r",
+											"    pm.expect(responseJson).to.have.property(\"usuarios\");\r",
+											"    pm.expect(responseJson.usuarios).to.have.length(qtde)\r",
+											"    pm.expect(responseJson.usuarios).to.have.jsonSchema(schemaUsuario);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}{{endpoint-usuarios}}",
+									"host": [
+										"{{host}}{{endpoint-usuarios}}"
+									]
+								},
+								"description": "Validar que, ao enviar requisição GET para o endpoint /usuarios, sem informar id de usuário específico, a lista de todos os usuários cadastrados é retornada.\n\nRetorno esperado: \n\nStatus code: 200\nResponse body: quantidade de usuários cadastrados e lista com os dados de cada usuário cadastrado."
+							},
+							"response": []
+						},
+						{
+							"name": "Deve retornar usuário pesquisado",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var envURL = pm.collectionVariables.get('host');\r",
+											"var usuariosEndpoint = pm.collectionVariables.get('endpoint-usuarios');\r",
+											"\r",
+											"var fullName = pm.variables.replaceIn('{{$randomFullName}}');\r",
+											"var email = pm.variables.replaceIn('{{$randomEmail}}');\r",
+											"\r",
+											"const cadastrarUsuarioPostRequest = {\r",
+											"    url: envURL + usuariosEndpoint,\r",
+											"    method: 'POST',\r",
+											"    header: {\r",
+											"        'content-type': 'application/json'\r",
+											"    },\r",
+											"    body: {\r",
+											"        mode: 'raw',\r",
+											"        raw: JSON.stringify({\"nome\": fullName, \"email\": email, \"password\": \"teste\", \"administrador\": \"true\"})\r",
+											"    }\r",
+											"};\r",
+											"\r",
+											"pm.sendRequest(cadastrarUsuarioPostRequest, function (err, response){\r",
+											"    pm.collectionVariables.set(\"idUsuarioCadastrado\", response.json()._id); \r",
+											"});\r",
+											"\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"\r",
+											"const schemaUsuario = {\r",
+											"    \"nome\": \"string\",\r",
+											"    \"email\": \"string\",\r",
+											"    \"password\": \"string\",\r",
+											"    \"administrador\": \"string\",\r",
+											"    \"_id\": \"string\"\r",
+											"};\r",
+											"\r",
+											"var idDoUsuario = pm.collectionVariables.get(\"idUsuarioCadastrado\");\r",
+											"\r",
+											"// Fiz testes separados somente para treinar; todas estas validações poderiam ser feitas em um único teste (como faço em meu dia a dia)\r",
+											"\r",
+											"pm.test(\"Status code deve ser igual a 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Deve retonar informações do usuário\", function () {\r",
+											"    var qtde = responseJson._id;\r",
+											"    pm.expect(responseJson).to.have.property(\"nome\");\r",
+											"    pm.expect(responseJson).to.have.property(\"email\");\r",
+											"    pm.expect(responseJson).to.have.property(\"password\");\r",
+											"    pm.expect(responseJson).to.have.property(\"administrador\");\r",
+											"    pm.expect(responseJson).to.have.property(\"_id\");\r",
+											"    pm.expect(responseJson._id).to.be.equal(idDoUsuario)\r",
+											"    pm.expect(responseJson.usuarios).to.have.jsonSchema(schemaUsuario);\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}{{endpoint-usuarios}}/{{idUsuarioCadastrado}}",
+									"host": [
+										"{{host}}{{endpoint-usuarios}}"
+									],
+									"path": [
+										"{{idUsuarioCadastrado}}"
+									]
+								},
+								"description": "Validar que, ao enviar requisição GET para o endpoint /usuarios, informando id de usuário específico, os dados do usuário que corresponde ao id informado são retornados.\n\nRetorno esperado:\n\nStatus code: 200\nResponse body: dados do usuário correspondente ao id informado."
+							},
+							"response": []
+						},
+						{
+							"name": "Não deve retornar usuário que não esteja cadastrado",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"\r",
+											"// Fiz testes separados somente para treinar; todas estas validações poderiam ser feitas em um único teste (como faço em meu dia a dia)\r",
+											"\r",
+											"pm.test(\"Status code deve ser igual a 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Deve retornar mensagem de usuário não encontrado\", function () {\r",
+											"    pm.expect(responseJson.message).to.be.equal(\"Usuário não encontrado\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}{{endpoint-usuarios}}/id1234ngj78",
+									"host": [
+										"{{host}}{{endpoint-usuarios}}"
+									],
+									"path": [
+										"id1234ngj78"
+									]
+								},
+								"description": "Validar que, ao enviar requisição GET para o endpoint /usuarios, informando id e usuário não cadastrado, deve retornar mensagem informando que o usuário não foi encontrado.\n\nRetorno esperado: \n\nStatus code: 400\nResponse body: mensagem \"Usuário não encontrado\""
+							},
+							"response": []
+						}
+					],
+					"description": "Testes do método GET do endpoint /usuarios - Validações de busca de usuários."
+				},
+				{
+					"name": "Método PUT - Validações de Alteração de usuário",
+					"item": [
+						{
+							"name": "Deve alterar usuário cadastrado quando campos são informados com valores válidos",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var envURL = pm.collectionVariables.get('host');\r",
+											"var usuariosEndpoint = pm.collectionVariables.get('endpoint-usuarios');\r",
+											"\r",
+											"var firstFullName = pm.variables.replaceIn('{{$randomFullName}}');\r",
+											"var firstEmail = pm.variables.replaceIn('{{$randomEmail}}');\r",
+											"\r",
+											"const cadastrarUsuarioPostRequest = {\r",
+											"    url: envURL + usuariosEndpoint,\r",
+											"    method: 'POST',\r",
+											"    header: {\r",
+											"        'content-type': 'application/json'\r",
+											"    },\r",
+											"    body: {\r",
+											"        mode: 'raw',\r",
+											"        raw: JSON.stringify({\"nome\": firstFullName, \"email\": firstEmail, \"password\": \"teste\", \"administrador\": \"true\"})\r",
+											"    }\r",
+											"};\r",
+											"\r",
+											"pm.sendRequest(cadastrarUsuarioPostRequest, function (err, response){\r",
+											"    pm.collectionVariables.set(\"idUsuarioCadastrado\", response.json()._id); \r",
+											"});\r",
+											"\r",
+											"pm.variables.replaceIn('{{$randomFullName}}');\r",
+											"pm.variables.replaceIn('{{$randomEmail}}');"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"\r",
+											"// Fiz testes separados somente para treinar; todas estas validações poderiam ser feitas em um único teste (como faço em meu dia a dia)\r",
+											"\r",
+											"pm.test(\"Status code deve ser igual a 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Deve retornar mensagem de usuário alterado com sucesso\", function () {\r",
+											"    pm.expect(responseJson.message).to.be.equal(\"Registro alterado com sucesso\");\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"nome\": \"{{$randomFullName}}\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"password\": \"testando\",\r\n  \"administrador\": \"false\"\r\n}"
+								},
+								"url": {
+									"raw": "{{host}}{{endpoint-usuarios}}/{{idUsuarioCadastrado}}",
+									"host": [
+										"{{host}}{{endpoint-usuarios}}"
+									],
+									"path": [
+										"{{idUsuarioCadastrado}}"
+									]
+								},
+								"description": "Validar que, ao enviar requisição PUT para o endpoint /usuarios, informando id de usuário já cadastrado e todos os campos obrigatórios com valores válidos, o usuário é alterado corretamente.\n\nRetorno esperado: \n\nStatus code: 200\nResponse body: mensagem \"Registro alterado com sucesso\""
+							},
+							"response": []
+						},
+						{
+							"name": "Deve cadastrar novo usuario quando id informado não corresponde a usuario ja cadastrado",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var numero = Math.floor(Math.random() * 100);\r",
+											"pm.collectionVariables.set(\"idUsuarioParaCadastrar\", \"0uxuPY0cbmQhpEz\" + numero);\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"\r",
+											"// Fiz testes separados somente para treinar; todas estas validações poderiam ser feitas em um único teste (como faço em meu dia a dia)\r",
+											"\r",
+											"pm.test(\"Status code deve ser igual a 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Deve retonar id do usuário cadastrado\", function () {\r",
+											"    pm.expect(responseJson._id).to.not.be.empty;\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Deve retornar mensagem de usuário cadastrado com sucesso\", function () {\r",
+											"    pm.expect(responseJson.message).to.be.equal(\"Cadastro realizado com sucesso\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"nome\": \"{{$randomFullName}}\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"password\": \"teste\",\r\n  \"administrador\": \"false\"\r\n}"
+								},
+								"url": {
+									"raw": "{{host}}{{endpoint-usuarios}}/{{idUsuarioParaCadastrar}}",
+									"host": [
+										"{{host}}{{endpoint-usuarios}}"
+									],
+									"path": [
+										"{{idUsuarioParaCadastrar}}"
+									]
+								},
+								"description": "Validar que, ao enviar requisição PUT para o endpoint /usuarios, informando id de usuário não cadastrado e dados válidos, um novo usuário é cadastrado.\n\nRetorno esperado: \n\nStatus code: 201\nResponse body: id do usuário cadastrado e mensagem \"Cadastro realizado com sucesso\""
+							},
+							"response": []
+						},
+						{
+							"name": "Não deve alterar usuário quando dados informados são inválidos",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var envURL = pm.collectionVariables.get('host');\r",
+											"var usuariosEndpoint = pm.collectionVariables.get('endpoint-usuarios');\r",
+											"\r",
+											"var firstFullName = pm.variables.replaceIn('{{$randomFullName}}');\r",
+											"var firstEmail = pm.variables.replaceIn('{{$randomEmail}}');\r",
+											"\r",
+											"const cadastrarUsuarioPostRequest = {\r",
+											"    url: envURL + usuariosEndpoint,\r",
+											"    method: 'POST',\r",
+											"    header: {\r",
+											"        'content-type': 'application/json'\r",
+											"    },\r",
+											"    body: {\r",
+											"        mode: 'raw',\r",
+											"        raw: JSON.stringify({\"nome\": firstFullName, \"email\": firstEmail, \"password\": \"teste\", \"administrador\": \"true\"})\r",
+											"    }\r",
+											"};\r",
+											"\r",
+											"pm.sendRequest(cadastrarUsuarioPostRequest, function (err, response){\r",
+											"    pm.collectionVariables.set(\"idUsuarioCadastrado\", response.json()._id); \r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"\r",
+											"// Fiz testes separados somente para treinar; todas estas validações poderiam ser feitas em um único teste (como faço em meu dia a dia)\r",
+											"\r",
+											"pm.test(\"Status code deve ser igual a 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Deve retornar mensagem de campos inválidos\", function () {\r",
+											"    pm.expect(responseJson.nome).to.be.equal(\"nome deve ser uma string\");\r",
+											"    pm.expect(responseJson.email).to.be.equal(\"email deve ser um email válido\");\r",
+											"    pm.expect(responseJson.password).to.be.equal(\"password deve ser uma string\");\r",
+											"    pm.expect(responseJson.administrador).to.be.equal(\"administrador deve ser 'true' ou 'false'\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"nome\": 1234,\r\n  \"email\": \"invalido\",\r\n  \"password\": 3456,\r\n  \"administrador\": 3456\r\n}"
+								},
+								"url": {
+									"raw": "{{host}}{{endpoint-usuarios}}/{{idUsuarioCadastrado}}",
+									"host": [
+										"{{host}}{{endpoint-usuarios}}"
+									],
+									"path": [
+										"{{idUsuarioCadastrado}}"
+									]
+								},
+								"description": "Validar que, ao enviar requisição PUT para o endpoint /usuarios, informando id de usuário cadastrado e todos os campos obrigatórios com valores inválidos, o usuário não é alterado.\n\nRetorno esperado:\n\nStatus code: 400\nResponse body: mensagens: \"nome deve ser uma string\", \"email deve ser um email válido\", \"password deve ser uma string\" e \"administrador deve ser true ou false\"."
+							},
+							"response": []
+						}
+					],
+					"description": "Testes do método PUT do endpoint /usuarios - Validações de alteração de usuários."
+				},
+				{
+					"name": "Método DELETE - Validações de Exclusão de usuário",
+					"item": [
+						{
+							"name": "Deve excluir usuário",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var envURL = pm.collectionVariables.get('host');\r",
+											"var usuariosEndpoint = pm.collectionVariables.get('endpoint-usuarios');\r",
+											"\r",
+											"var fullName = pm.variables.replaceIn('{{$randomFullName}}');\r",
+											"var email = pm.variables.replaceIn('{{$randomEmail}}');\r",
+											"\r",
+											"const cadastrarUsuarioPostRequest = {\r",
+											"    url: envURL + usuariosEndpoint,\r",
+											"    method: 'POST',\r",
+											"    header: {\r",
+											"        'content-type': 'application/json'\r",
+											"    },\r",
+											"    body: {\r",
+											"        mode: 'raw',\r",
+											"        raw: JSON.stringify({\"nome\": fullName, \"email\": email, \"password\": \"teste\", \"administrador\": \"true\"})\r",
+											"    }\r",
+											"};\r",
+											"\r",
+											"pm.sendRequest(cadastrarUsuarioPostRequest, function (err, response){\r",
+											"    pm.collectionVariables.set(\"idUsuarioCadastrado\", response.json()._id); \r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"\r",
+											"// Fiz testes separados somente para treinar; todas estas validações poderiam ser feitas em um único teste (como faço em meu dia a dia)\r",
+											"\r",
+											"pm.test(\"Status code deve ser igual a 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Deve retornar mensagem de usuário excluído com sucesso\", function () {\r",
+											"    pm.expect(responseJson.message).to.be.equal(\"Registro excluído com sucesso\");\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}{{endpoint-usuarios}}/{{idUsuarioCadastrado}}",
+									"host": [
+										"{{host}}{{endpoint-usuarios}}"
+									],
+									"path": [
+										"{{idUsuarioCadastrado}}"
+									]
+								},
+								"description": "Validar que, ao enviar requisição DELETE para o endpoint /usuarios, informando id de usuário já cadastrado, o usuário é excluído corretamente quando o mesmo não possui carrinho associado a ele.\n\nRetorno esperado: \n\nStatus code: 200\nResponse body: mensagem \"Registro excluído com sucesso\""
+							},
+							"response": []
+						},
+						{
+							"name": "Deve apresentar mensagem de nenhum registro excluído quando usuário informado não é encontrado",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var numero = Math.floor(Math.random() * 100);\r",
+											"pm.collectionVariables.set(\"idUsuarioParaCadastrar\", \"0uxuPY0cbmQhpEz\" + numero);\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"\r",
+											"// Fiz testes separados somente para treinar; todas estas validações poderiam ser feitas em um único teste (como faço em meu dia a dia)\r",
+											"\r",
+											"pm.test(\"Status code deve ser igual a 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Deve retornar mensagem de nenhum registro excluído\", function () {\r",
+											"    pm.expect(responseJson.message).to.be.equal(\"Nenhum registro excluído\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}{{endpoint-usuarios}}/{{idUsuarioParaCadastrar}}",
+									"host": [
+										"{{host}}{{endpoint-usuarios}}"
+									],
+									"path": [
+										"{{idUsuarioParaCadastrar}}"
+									]
+								},
+								"description": "Validar que, ao enviar requisição DELETE para o endpoint /usuarios, informando id de usuário não cadastrado, a API retorna mensagem de nenhum registro excluído.\n\nRetorno esperado: \n\nStatus code: 200\nResponse body: mensagem \"Nenhum registro excluído\""
+							},
+							"response": []
+						},
+						{
+							"name": "Não deve excluir usuário que possui carrinho",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var envURL = pm.collectionVariables.get('host');\r",
+											"var fullName = pm.variables.replaceIn('{{$randomFullName}}');\r",
+											"var email = pm.variables.replaceIn('{{$randomEmail}}');\r",
+											"\r",
+											"pm.collectionVariables.set(\"emailJaCadastrado\", email); \r",
+											"\r",
+											"function cadastrarUsuario(callback){\r",
+											"    // Cadastrando usuário\r",
+											"    var usuariosEndpoint = pm.collectionVariables.get('endpoint-usuarios');\r",
+											"\r",
+											"    const cadastrarUsuarioPostRequest = {\r",
+											"        url: envURL + usuariosEndpoint,\r",
+											"        method: 'POST',\r",
+											"        header: {\r",
+											"            'content-type': 'application/json'\r",
+											"        },\r",
+											"        body: {\r",
+											"            mode: 'raw',\r",
+											"            raw: JSON.stringify({\"nome\": fullName, \"email\": email, \"password\": \"teste\", \"administrador\": \"true\"})\r",
+											"        }\r",
+											"    };\r",
+											"\r",
+											"    pm.sendRequest(cadastrarUsuarioPostRequest, function (err, response){\r",
+											"        pm.collectionVariables.set(\"idUsuarioCadastrado\", response.json()._id); \r",
+											"    });\r",
+											"\r",
+											"    setTimeout(callback, 2000);\r",
+											"\r",
+											"}\r",
+											"\r",
+											"function recuperarToken(callback){\r",
+											"\r",
+											"    var loginEndpoint = pm.collectionVariables.get('endpoint-login');\r",
+											"\r",
+											"    const realizarLoginPostRequest = {\r",
+											"        url: envURL + loginEndpoint,\r",
+											"        method: 'POST',\r",
+											"        header: {\r",
+											"            'content-type': 'application/json'\r",
+											"        },\r",
+											"        body: {\r",
+											"            mode: 'raw',\r",
+											"            raw: JSON.stringify({\"email\": email, \"password\": \"teste\"})\r",
+											"        }\r",
+											"    };\r",
+											"\r",
+											"    pm.sendRequest(realizarLoginPostRequest, function (err, resp){\r",
+											"        pm.collectionVariables.set(\"token\", resp.json().authorization); \r",
+											"    });\r",
+											"\r",
+											"    setTimeout(callback, 2000);\r",
+											"}\r",
+											"\r",
+											"function cadastrarProduto(callback){\r",
+											"    // Cadastrando produto\r",
+											"    var produtosEndpoint = pm.collectionVariables.get('endpoint-produtos');\r",
+											"\r",
+											"    var nomeProduto = pm.variables.replaceIn('{{$randomProductName}}');\r",
+											"    var descricaoProduto = pm.variables.replaceIn('{{$randomLoremText}}')\r",
+											"    var token = pm.collectionVariables.get(\"token\");\r",
+											"\r",
+											"    const cadastrarProdutoPostRequest = {\r",
+											"        url: envURL + produtosEndpoint,\r",
+											"        method: 'POST',\r",
+											"        header: {\r",
+											"            'content-type': 'application/json',\r",
+											"            'Authorization': token\r",
+											"        },\r",
+											"        body: {\r",
+											"            mode: 'raw',\r",
+											"            raw: JSON.stringify({\"nome\": nomeProduto, \"preco\": 110, \"descricao\": descricaoProduto, \"quantidade\": 250})\r",
+											"        }\r",
+											"    };\r",
+											"\r",
+											"    pm.sendRequest(cadastrarProdutoPostRequest, function (err, response){\r",
+											"        pm.collectionVariables.set(\"idProdutoCadastrado\", response.json()._id); \r",
+											"    });\r",
+											"\r",
+											"    setTimeout(callback, 2000);\r",
+											"}\r",
+											"\r",
+											"function cadastrarCarrinho(){\r",
+											"    // Criando carrinho\r",
+											"    var carrinhosEndpoint = pm.collectionVariables.get('endpoint-carrinhos');\r",
+											"    var idProdutoCadastrado = pm.collectionVariables.get('idProdutoCadastrado');\r",
+											"    var token = pm.collectionVariables.get(\"token\");\r",
+											"\r",
+											"    const cadastrarCarrinhoPostRequest = {\r",
+											"        url: envURL + carrinhosEndpoint,\r",
+											"        method: 'POST',\r",
+											"        header: {\r",
+											"            'content-type': 'application/json',\r",
+											"            'Authorization': token\r",
+											"        },\r",
+											"        body: {\r",
+											"            mode: 'raw',\r",
+											"            raw: JSON.stringify({\"produtos\": [ { \"idProduto\": idProdutoCadastrado, \"quantidade\": 1 }]})\r",
+											"        }\r",
+											"    };\r",
+											"\r",
+											"    pm.sendRequest(cadastrarCarrinhoPostRequest);\r",
+											"}\r",
+											"\r",
+											"\r",
+											"// NOTA: Deixei com callback o controle da execução do fluxo somente para meu estudo. No dia a dia, controlo a execução no Postman utilizando variáveis de ambiente e criando uma ordem. Sei que poderia ter criado promisses pra facilitar o controle e que tantos leveis de callbacks como deixei aqui não são boa prática no geral, mas deixei INTENCIONALMENTE para meu estudo.\r",
+											"setTimeout(() => cadastrarUsuario(() => recuperarToken(() => cadastrarProduto(() => cadastrarCarrinho()))), 3000);\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"\r",
+											"// Fiz testes separados somente para treinar; todas estas validações poderiam ser feitas em um único teste (como faço em meu dia a dia)\r",
+											"\r",
+											"pm.test(\"Status code deve ser igual a 400\", function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Deve retornar mensagem de erro ao tentar excluir usuário com carrinho cadastrado\", function () {\r",
+											"    pm.expect(responseJson.message).to.be.equal(\"Não é permitido excluir usuário com carrinho cadastrado\");\r",
+											"    pm.expect(responseJson.idCarrinho).to.not.be.empty;\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{host}}{{endpoint-usuarios}}/{{idUsuarioCadastrado}}",
+									"host": [
+										"{{host}}{{endpoint-usuarios}}"
+									],
+									"path": [
+										"{{idUsuarioCadastrado}}"
+									]
+								},
+								"description": "Validar que, ao enviar requisição DELETE para o endpoint /usuarios, informando id de usuário que possua carrinho cadastrado, o usuário não é excluído e mensagem informando o motivo é retornada.\n\nRetorno esperado:\n\nStatus code: 400\nResponse body: mensagem \"Não é permitido excluir usuário com carrinho cadastrado\" e idCarrinho cadastrado para o usuário"
+							},
+							"response": []
+						}
+					],
+					"description": "Testes do método DELETE do endpoint /usuarios - Validações de exclusão de usuários."
+				}
+			],
+			"description": "Testes do endpoint /usuarios"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "http://localhost:3000",
+			"type": "default"
+		},
+		{
+			"key": "endpoint-usuarios",
+			"value": "/usuarios",
+			"type": "default"
+		},
+		{
+			"key": "emailJaCadastrado",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "idUsuarioCadastrado",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "idUsuarioParaCadastrar",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "endpoint-login",
+			"value": "/login",
+			"type": "default"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "endpoint-produtos",
+			"value": "/produtos",
+			"type": "default"
+		},
+		{
+			"key": "idProdutoCadastrado",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "endpoint-carrinhos",
+			"value": "/carrinhos",
+			"type": "default"
+		},
+		{
+			"key": "nome-fluxo",
+			"value": "deletar",
+			"type": "default"
+		}
+	]
+}

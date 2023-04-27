@@ -1,0 +1,548 @@
+{
+	"id": "14098fa5-e14e-4999-84e5-110b5c767e3a",
+	"name": "ebac-collection-modulo-13",
+	"timestamp": "2023-04-27T19:33:05.796Z",
+	"collection_id": "0-fb032c4a-44b5-457e-bf2f-deafc5927d03",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 30,
+	"totalFail": 0,
+	"results": [
+		{
+			"id": "8a410209-79f8-4b3c-8452-d119320622b3",
+			"name": "Deve cadastrar usuário quando todos os campos obrigatórios são informados com valores válidos",
+			"url": "http://localhost:3000/usuarios",
+			"time": 17,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Status code deve ser igual a 201": true,
+				"Deve retonar id do usuário cadastrado": true,
+				"Deve retornar mensagem de usuário cadastrado com sucesso": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser igual a 201": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Deve retonar id do usuário cadastrado": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Deve retornar mensagem de usuário cadastrado com sucesso": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				17
+			],
+			"allTests": [
+				{
+					"Status code deve ser igual a 201": true,
+					"Deve retonar id do usuário cadastrado": true,
+					"Deve retornar mensagem de usuário cadastrado com sucesso": true
+				}
+			]
+		},
+		{
+			"id": "84f49e74-0fb2-4196-9091-f766803a88c3",
+			"name": "Não deve cadastrar usuário quando e-mail informado já está cadastrado",
+			"url": "http://localhost:3000/usuarios",
+			"time": 5,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Status code deve ser igual a 400": true,
+				"Deve retornar mensagem de e-mail já utilizado": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser igual a 400": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Deve retornar mensagem de e-mail já utilizado": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				5
+			],
+			"allTests": [
+				{
+					"Status code deve ser igual a 400": true,
+					"Deve retornar mensagem de e-mail já utilizado": true
+				}
+			]
+		},
+		{
+			"id": "f4d4c98b-1487-4ae7-b3cd-850ab1a32f7e",
+			"name": "Não deve cadastrar usuário quando os dados obrigatórios não são informados",
+			"url": "http://localhost:3000/usuarios",
+			"time": 6,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Status code deve ser igual a 400": true,
+				"Deve retornar mensagem de obrigatoriedade de campos": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser igual a 400": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Deve retornar mensagem de obrigatoriedade de campos": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				6
+			],
+			"allTests": [
+				{
+					"Status code deve ser igual a 400": true,
+					"Deve retornar mensagem de obrigatoriedade de campos": true
+				}
+			]
+		},
+		{
+			"id": "4e6692e5-383c-40ad-97b0-70b924a392e2",
+			"name": "Não deve cadastrar usuário quando os dados são enviados em branco",
+			"url": "http://localhost:3000/usuarios",
+			"time": 7,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Status code deve ser igual a 400": true,
+				"Deve retornar mensagem de obrigatoriedade de campos": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser igual a 400": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Deve retornar mensagem de obrigatoriedade de campos": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				7
+			],
+			"allTests": [
+				{
+					"Status code deve ser igual a 400": true,
+					"Deve retornar mensagem de obrigatoriedade de campos": true
+				}
+			]
+		},
+		{
+			"id": "b41e9c4b-ee98-44d3-9bb0-3c10aae68fa5",
+			"name": "Não deve cadastrar usuário quando os dados são enviados inválidos",
+			"url": "http://localhost:3000/usuarios",
+			"time": 5,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Status code deve ser igual a 400": true,
+				"Deve retornar mensagem de obrigatoriedade de campos": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser igual a 400": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Deve retornar mensagem de obrigatoriedade de campos": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				5
+			],
+			"allTests": [
+				{
+					"Status code deve ser igual a 400": true,
+					"Deve retornar mensagem de obrigatoriedade de campos": true
+				}
+			]
+		},
+		{
+			"id": "ca6260b8-485f-4d54-88ce-71dabbc3a4df",
+			"name": "Deve listar todos os usuários cadastrados",
+			"url": "http://localhost:3000/usuarios",
+			"time": 12,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code deve ser igual a 200": true,
+				"Deve retonar quantidade e lista de usuários cadastrados": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser igual a 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Deve retonar quantidade e lista de usuários cadastrados": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				12
+			],
+			"allTests": [
+				{
+					"Status code deve ser igual a 200": true,
+					"Deve retonar quantidade e lista de usuários cadastrados": true
+				}
+			]
+		},
+		{
+			"id": "179b17e1-31ec-42ae-81c8-2f0371b8bd5d",
+			"name": "Deve retornar usuário pesquisado",
+			"url": "http://localhost:3000/usuarios/yH6jkIi0mBPBKx02",
+			"time": 5,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code deve ser igual a 200": true,
+				"Deve retonar informações do usuário": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser igual a 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Deve retonar informações do usuário": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				5
+			],
+			"allTests": [
+				{
+					"Status code deve ser igual a 200": true,
+					"Deve retonar informações do usuário": true
+				}
+			]
+		},
+		{
+			"id": "bc95a602-2920-4071-8909-aa2ab23e05dd",
+			"name": "Não deve retornar usuário que não esteja cadastrado",
+			"url": "http://localhost:3000/usuarios/id1234ngj78",
+			"time": 5,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Status code deve ser igual a 400": true,
+				"Deve retornar mensagem de usuário não encontrado": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser igual a 400": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Deve retornar mensagem de usuário não encontrado": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				5
+			],
+			"allTests": [
+				{
+					"Status code deve ser igual a 400": true,
+					"Deve retornar mensagem de usuário não encontrado": true
+				}
+			]
+		},
+		{
+			"id": "414fe451-fca4-4c2e-8617-5ac5e20c1b77",
+			"name": "Deve alterar usuário cadastrado quando campos são informados com valores válidos",
+			"url": "http://localhost:3000/usuarios/WfDwNPIryhAnu2VC",
+			"time": 8,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code deve ser igual a 200": true,
+				"Deve retornar mensagem de usuário alterado com sucesso": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser igual a 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Deve retornar mensagem de usuário alterado com sucesso": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				8
+			],
+			"allTests": [
+				{
+					"Status code deve ser igual a 200": true,
+					"Deve retornar mensagem de usuário alterado com sucesso": true
+				}
+			]
+		},
+		{
+			"id": "9621e2c1-7340-40a9-89e1-654ddf0b6d55",
+			"name": "Deve cadastrar novo usuario quando id informado não corresponde a usuario ja cadastrado",
+			"url": "http://localhost:3000/usuarios/0uxuPY0cbmQhpEz57",
+			"time": 9,
+			"responseCode": {
+				"code": 201,
+				"name": "Created"
+			},
+			"tests": {
+				"Status code deve ser igual a 201": true,
+				"Deve retonar id do usuário cadastrado": true,
+				"Deve retornar mensagem de usuário cadastrado com sucesso": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser igual a 201": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Deve retonar id do usuário cadastrado": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Deve retornar mensagem de usuário cadastrado com sucesso": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				9
+			],
+			"allTests": [
+				{
+					"Status code deve ser igual a 201": true,
+					"Deve retonar id do usuário cadastrado": true,
+					"Deve retornar mensagem de usuário cadastrado com sucesso": true
+				}
+			]
+		},
+		{
+			"id": "84d94daa-1cfb-47b7-a0f5-c870db57f94b",
+			"name": "Não deve alterar usuário quando dados informados são inválidos",
+			"url": "http://localhost:3000/usuarios/4WrvgaLkBAY7k2sX",
+			"time": 4,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Status code deve ser igual a 400": true,
+				"Deve retornar mensagem de campos inválidos": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser igual a 400": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Deve retornar mensagem de campos inválidos": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				4
+			],
+			"allTests": [
+				{
+					"Status code deve ser igual a 400": true,
+					"Deve retornar mensagem de campos inválidos": true
+				}
+			]
+		},
+		{
+			"id": "b391d035-1a59-40be-a27d-f306af8b2db5",
+			"name": "Deve excluir usuário",
+			"url": "http://localhost:3000/usuarios/CZ1hGKSY2zcaXhpk",
+			"time": 6,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code deve ser igual a 200": true,
+				"Deve retornar mensagem de usuário excluído com sucesso": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser igual a 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Deve retornar mensagem de usuário excluído com sucesso": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				6
+			],
+			"allTests": [
+				{
+					"Status code deve ser igual a 200": true,
+					"Deve retornar mensagem de usuário excluído com sucesso": true
+				}
+			]
+		},
+		{
+			"id": "6ee14f4c-1985-42e9-866d-60e7f356f4f1",
+			"name": "Deve apresentar mensagem de nenhum registro excluído quando usuário informado não é encontrado",
+			"url": "http://localhost:3000/usuarios/0uxuPY0cbmQhpEz64",
+			"time": 5,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code deve ser igual a 200": true,
+				"Deve retornar mensagem de nenhum registro excluído": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser igual a 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Deve retornar mensagem de nenhum registro excluído": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				5
+			],
+			"allTests": [
+				{
+					"Status code deve ser igual a 200": true,
+					"Deve retornar mensagem de nenhum registro excluído": true
+				}
+			]
+		},
+		{
+			"id": "dbef840e-805a-4a62-872e-f1e64b0daccd",
+			"name": "Não deve excluir usuário que possui carrinho",
+			"url": "http://localhost:3000/usuarios/zQKyEopLKx4aOnjq",
+			"time": 6,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Status code deve ser igual a 400": true,
+				"Deve retornar mensagem de erro ao tentar excluir usuário com carrinho cadastrado": true
+			},
+			"testPassFailCounts": {
+				"Status code deve ser igual a 400": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Deve retornar mensagem de erro ao tentar excluir usuário com carrinho cadastrado": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				6
+			],
+			"allTests": [
+				{
+					"Status code deve ser igual a 400": true,
+					"Deve retornar mensagem de erro ao tentar excluir usuário com carrinho cadastrado": true
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 100,
+	"collection": {
+		"requests": [
+			{
+				"id": "8a410209-79f8-4b3c-8452-d119320622b3",
+				"method": "POST"
+			},
+			{
+				"id": "84f49e74-0fb2-4196-9091-f766803a88c3",
+				"method": "POST"
+			},
+			{
+				"id": "f4d4c98b-1487-4ae7-b3cd-850ab1a32f7e",
+				"method": "POST"
+			},
+			{
+				"id": "4e6692e5-383c-40ad-97b0-70b924a392e2",
+				"method": "POST"
+			},
+			{
+				"id": "b41e9c4b-ee98-44d3-9bb0-3c10aae68fa5",
+				"method": "POST"
+			},
+			{
+				"id": "ca6260b8-485f-4d54-88ce-71dabbc3a4df",
+				"method": "GET"
+			},
+			{
+				"id": "179b17e1-31ec-42ae-81c8-2f0371b8bd5d",
+				"method": "GET"
+			},
+			{
+				"id": "bc95a602-2920-4071-8909-aa2ab23e05dd",
+				"method": "GET"
+			},
+			{
+				"id": "414fe451-fca4-4c2e-8617-5ac5e20c1b77",
+				"method": "PUT"
+			},
+			{
+				"id": "9621e2c1-7340-40a9-89e1-654ddf0b6d55",
+				"method": "PUT"
+			},
+			{
+				"id": "84d94daa-1cfb-47b7-a0f5-c870db57f94b",
+				"method": "PUT"
+			},
+			{
+				"id": "b391d035-1a59-40be-a27d-f306af8b2db5",
+				"method": "DELETE"
+			},
+			{
+				"id": "6ee14f4c-1985-42e9-866d-60e7f356f4f1",
+				"method": "DELETE"
+			},
+			{
+				"id": "dbef840e-805a-4a62-872e-f1e64b0daccd",
+				"method": "DELETE"
+			}
+		]
+	}
+}
